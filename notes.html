@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Notes App</title>
+    <style>
+        body{
+            background-color: rgb(127, 132, 134);
+            background-image: url("pink.jpg");
+        }
+        .date {
+  font-weight: bold;
+  margin-right: 10px;
+  border-radius: 50px 0 50px 0;
+  background-color:rgb(132, 27, 59);
+  font-weight: bold;
+  margin-right: 10px;
+  color: #f9f5f5;
+}
+#note-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+li {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px #ccc;
+  flex-basis: calc(33.33% - 10px);
+  box-sizing: border-box;
+  cursor: pointer;
+}
+ul {
+  list-style-type: none;
+}
+
+@media (max-width: 600px) {
+  li {
+    flex-basis: calc(50% - 10px);
+  
+  }
+}
+
+@media (max-width: 400px) {
+  li {
+    flex-basis: 100%;
+    margin-right: 0;
+   
+  }
+}
+
+
+.text {
+  margin-left: 10px;
+  color: #444;
+ 
+}
+
+.delete {
+  margin-left: 10px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  
+  border-radius: 12px ;
+  background-color: rgb(106, 197, 197);
+  color: #92254f;
+  display: flex;
+  justify-content: flex-end;
+
+}
+
+.click:hover {
+  background-color: #36421f;
+}
+.delete:hover {
+  background-color: #d32f2f;
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+
+
+.text {
+    font-size:15px ;
+   
+  margin-left: 20px;
+/* background-color:rgb(214, 155, 171); */
+color: rgb(11, 17, 17);
+}
+
+
+.head{
+   text-shadow: rgb(72, 65, 72);
+   font-size:60px;
+   font-style:oblique;
+
+   /* text-decoration: underline rgb(113, 17, 41); */
+   
+text-align: center;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 
+    'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+font-style:bold;
+color:darkmagenta
+
+
+}
+.click{
+    padding: 15px 32px;
+    color:aliceblue;
+    cursor: pointer;
+    border-radius: 50px;
+    border:5px solid #92254f;
+    transform-style:preserve-3d;
+    /* height: 2.5%;
+    width: 9%; */
+    background-color: rgb(11, 50, 80);
+ 
+
+}
+.note{
+    border-radius: 0 50px 0  50px ;
+    height: 100px;
+    width: 200px;
+   font-family:Papyrus;
+  font-size: 20px;
+  background-color: rgb(245, 205, 230);
+  cursor: pointer;
+  box-shadow: 2px 2px 5px #ccc;
+  
+}
+
+    </style>
+  </head>
+  <body>
+
+    <h1 class="head">Notes App</h1>
+    
+  
+    <input  class="note " type="text" id="note-input">
+    <button class="click" id="add-note" >Add Note</button>
+    <ul id="note-list"></ul>    
+
+    <script >
+       const noteInput = document.getElementById('note-input');
+const addNoteButton = document.getElementById('add-note');
+const noteList = document.getElementById('note-list');
+addNoteButton.addEventListener('click', function() {
+  const noteText = noteInput.value;
+  if (noteText === '') return;
+
+  const date = new Date().toISOString().slice(0, 10);
+  const note = {
+    text: noteText,
+    date: date
+  };
+  let notes = JSON.parse(localStorage.getItem('notes')) || [];
+  notes.push(note);
+  localStorage.setItem('notes', JSON.stringify(notes));
+
+  noteInput.value = '';
+
+  displayNotes();
+});
+function displayNotes() {
+  noteList.innerHTML = '';
+
+  let notes = JSON.parse(localStorage.getItem('notes')) || [];
+
+  notes.forEach(function(note, index) {
+    const li = document.createElement('li');
+    const date = document.createElement('span');
+    date.classList.add('date');
+    date.innerText = note.date;
+    const text = document.createElement('span');
+    text.classList.add('text');
+    text.innerText = note.text;
+    const deleteButton = document.createElement('button');
+    deleteButton.classList.add('delete');
+    deleteButton.innerText = 'Delete';
+    deleteButton.addEventListener('click', function() {
+      notes.splice(index, 1);
+      localStorage.setItem('notes', JSON.stringify(notes));
+      displayNotes();
+    });
+   
+
+    li.appendChild(date);
+    li.appendChild(text);
+    li.appendChild(deleteButton);
+    
+    noteList.appendChild(li);
+  });
+
+
+
+}
+window.addEventListener('load', function() {
+  displayNotes();
+});
+
+
+
+
+    </script>
+  </body>
+</html>
